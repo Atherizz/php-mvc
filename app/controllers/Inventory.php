@@ -58,8 +58,6 @@ class Inventory extends Controller {
 
     }
 
-
-
     public function tambah() {
         
         if($this->model('Inventory_model')->tambahDataProduk($_POST) > 0) {

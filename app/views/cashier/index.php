@@ -6,18 +6,17 @@
             <h3>Cashier</h3>
             <br>
 
-            <form>
+            <form action="<?= BASEURL; ?>/cashier/addToCart"  method="POST">
                 <div class="mb-3">
                     <label for="productName" class="form-label">Nama Produk</label>
-                    <input type="text" class="form-control" id="productName" name="productName" required>
+                    <input type="text" class="form-control" id="productName" name="produk" required>
                 </div>
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" class="form-control" id="quantity" name="quantity" required>
+                    <input type="number" class="form-control" id="quantity" name="qty" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                <button type="submit" name="submit" class="btn btn-primary">Add to Cart</button>
             </form>
-
             <br>
 
             <table class="table">
@@ -31,13 +30,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php foreach ($data["cashier"] as $row) : ?>
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Product 1</td>
-                        <td>2</td>
-                        <td>$10</td>
-                        <td>$20</td>
+                        <th scope="row"><?= $row["id"] ?></th>
+                        <td><?= $row["barang"] ?></td>
+                        <td><?= $row["qty"] ?></td>
+                        <td><?= $row["harga"] ?></td>
+                        <td><?= $row["subtotal"] ?></td>
                     </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <form>
