@@ -25,6 +25,21 @@ public function addToCart() {
 }
 }
 
+public function checkoutProduct() {
+    if (isset($_POST['submit'])) {
+        if($this->model('Cashier_model')->tambahDataLaporan($_POST) > 0) {
+            Flasher::setFlash('berhasil', 'ditambahkan', 'success');
+            header('Location:' . BASEURL . '/cashier');
+            exit;
+        } else {
+            Flasher::setFlash('gagal', 'ditambahkan', 'danger');
+            header('Location:' . BASEURL . '/cashier');
+            exit;
+        }
+    }
+
+}
+
 
 }
 

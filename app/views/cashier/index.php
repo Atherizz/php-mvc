@@ -41,12 +41,12 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <form>
+                <form action="<?= BASEURL;?>/cashier/checkoutProduct" method="POST">
                 <div class="mb-3">
                     <label for="customerID" class="form-label">Customer ID</label>
                     <input type="text" class="form-control" id="customerID" name="customerID" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Checkout</button>
+                <button type="submit" name="submit" class="btn btn-primary">Checkout</button>
             </form>
 
         </div>

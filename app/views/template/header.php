@@ -20,6 +20,7 @@
         <a class="nav-link" href="<?=BASEURL?>/inventory">Inventory</a>
         <a class="nav-link "href="<?=BASEURL?>/report" >Sales Report</a>
         <a class="nav-link "href="<?=BASEURL?>/cashier" >Cashier</a>
+        <a class="nav-link "href="<?=BASEURL?>/transaction" >Payment Report</a>
       </div>
     </div>
   </div>
