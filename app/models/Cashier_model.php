@@ -13,8 +13,22 @@ Class Cashier_model {
         return $this->db->resultSet();
     }
 
+    public function getAllDiscount() {
+        $this->db->query(('SELECT * FROM diskon'));
+        return $this->db->resultSet();
+    }
+
+    // public function getDiscountInfo($data) {
+    //     $cekDiskon = (int)
+    //     $query = "SELECT * FROM diskon WHERE ";
+    // }
+
     public function tambahDataLaporan($data) {
+
+        $error = "";
+
         $idCustomer = (int)$data['customerID'];
+        $idDiskon =(int)$data["discountID"];
 
         $queryCheckCustomer = "SELECT * FROM customer WHERE id = :id";
         $this->db->query($queryCheckCustomer);
@@ -27,19 +41,35 @@ Class Cashier_model {
             $this->db->query($queryInsertCustomer);
             $this->db->bind('id', $idCustomer);
             $this->db->execute();
-        }
+        } 
 
         $subtotal = 0;
 
-        $queryHarga = "SELECT harga FROM detail_transaksi";
+        $queryHarga = "SELECT * FROM detail_transaksi";
         $this->db->query($queryHarga);
         $ambilHarga = $this->db->resultSet();
 
         foreach ($ambilHarga as $row) {
-            $subtotal += $row['harga'];
+            $subtotal += $row['subtotal'];
         }
 
         $date = date('Y-m-d H:i:s');
+
+        // MEMERIKSA DISKON
+        $queryDiskon = "SELECT * FROM diskon WHERE id = :id ";
+        $this->db->query($queryDiskon);
+        $this->db->bind('id', $idDiskon);
+        $resultDiscount = $this->db->single();
+
+        if ($this->db->rowCount() == 1) {
+            if ($resultDiscount['masa_berlaku'] > $date) {
+                $subtotal -= ($subtotal * ($resultDiscount['persentase'] / 100));
+            } else {
+                return "diskon sudah tidak berlaku!";
+            }
+        } else {
+            return "diskon tidak ditemukan!";
+        }
 
         // MENAMBAHKAN LAPORAN TRANSAKSI TIAP PEMBAYARAN
         $queryTransaksi = "INSERT INTO transaksi (customer_id, `date`, total) VALUES
@@ -63,9 +93,13 @@ Class Cashier_model {
 
         $queryDelete = "DELETE FROM detail_transaksi";
         $this->db->query($queryDelete);
-        $this->db->execute();
 
-        return $this->db->rowCount();
+        if ($this->db->execute()) {
+            return true;
+        }
+        
+
+     
     }
 
     public function tambahDataKasir($data) {
@@ -81,7 +115,7 @@ Class Cashier_model {
         if ($ambilIdBarang) {
             $idBarang = $ambilIdBarang['id'];
             } else {
-            return false;
+            return "barang tidak ditemukan";
             }
 
         $queryHarga = "SELECT harga FROM barang WHERE produk = :produk";
@@ -99,8 +133,10 @@ Class Cashier_model {
         $this->db->bind('qty', $qty);
         $this->db->bind('harga', $harga);
         $this->db->bind('barang', $barang);
-        $this->db->execute();
-        return $this->db->rowCount();
+        
+        if ($this->db->execute()) {
+            return true;
+        } 
 
     }
 
